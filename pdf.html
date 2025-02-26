@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table to PDF</title>
+    
+    <!-- PDFMake Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/pdf_style.css" />
+    <!-- <link rel="stylesheet" href="css/media.css" /> -->
+    
+    <style>
+        body {
+            font-family: "Poppins-Regular";
+            margin: 0;
+            padding: 20px;
+        }
+
+        .pdf-table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        /* Frames */
+        .frame-left {
+            text-align: left;
+        }
+        .frame-right {
+            text-align: right;
+        }
+
+        /* Logo */
+        .logo {
+            height: 60px;
+        }
+
+        /* Container for Customer Greeting & Table */
+        .content-container {
+            width: 70%; /* Adjust width as needed */
+            margin: auto;
+            text-align: left;
+        }
+
+        /* Subheading */
+        .sub-heading {
+            background-color: #0A4DB7;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        /* Details Table */
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details-table th, .details-table td {
+            /* border: 1px solid #ddd; */
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .details-table th {
+            font-size: 0.9rem;
+            text-align: left;
+            font-weight: bold;
+        }
+        .details-container {
+            color: #133158;
+            margin-top: 15px; /* Space from top */
+            padding: 20px;
+            border: 1px solid #ddd; /* Light grey border */
+            border-radius: 10px; /* Rounded corners */
+            /* background-color: #f9f9f9; Light grey background */
+        }
+
+        /* Download Button */
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <table class="pdf-table">
+        <!-- Frames Row -->
+        <tr>
+            <td align="left">
+                <img src="img/left_frame.svg" alt="Left Frame">
+            </td>
+            <td align="right">
+                <img src="img/right_frame.svg" alt="Right Frame">
+            </td>
+        </tr>
+
+        <!-- Logos Row -->
+        <tr>
+            <td align="left" style="padding-left: 165px; padding-top: 23px;">
+                <img src="img/left_logo.svg" alt="FINQY Logo" class="logo">
+            </td>
+            <td align="right" style="padding-right: 160px; padding-top: 23px;">
+                <img src="img/right_logo.svg" alt="Future Generali" class="logo">
+            </td>
+        </tr>    
+    </table>
+
+    <!-- Customer Greeting & Table Content in a Centered Container -->
+    <div class="content-container">
+        <!-- Customer Greeting -->
+        <p style="padding-top: 55px;">
+            <b style="color: #133158; font-size: 1.2rem;">Dear [Customer Name]</b>
+        </p>
+        <p style="padding-top: 2.5px; white-space: nowrap; color: #133158; font-size: 0.9rem;">
+            Thank you for giving us an opportunity to provide you a Quote. The premium calculation for your vehicle is given below.
+        </p>
+
+        <!-- Subheading -->
+        <div class="sub-heading">
+            TWO WHEELER BUNDLED PLAN PREMIUM BREAKUP (1 YEAR OD + 5 YEAR TP)
+        </div>
+
+        <!-- Details Table -->
+        <div class="details-container">
+            <table class="details-table" id="details-table">
+                <tr>
+                    <th>Quotation No.:</th>
+                    <td>97e57f64-e0f8-7360-2b6c-01a4db5e16ab</td>
+                    <th>Registration No.</th>
+                    <td>MH-03 (Mumbai)</td>
+                </tr>
+                <tr>
+                    <th>Make and Model</th>
+                    <td>HERO HONDA–HUNK–KICK START (Petrol)</td>
+                    <th>Seating Capacity</th>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <th>Cubic Capacity</th>
+                    <td>150</td>
+                    <th>Email</th>
+                    <td>xyz@gmail.com</td>
+                </tr>
+                <tr>
+                    <th>Mobile No.</th>
+                    <td>+91 1234567890</td>
+                    <th>Vehicle IDV</th>
+                    <td>52,581</td>
+                </tr>
+                <tr>
+                    <th>Period Of Insurance</th>
+                    <td colspan="3">
+                        OD: 11/02/2025 To 10/02/2026 <br>
+                        TP: 11/02/2025 To 10/02/2030
+                    </td>
+                    <th>Manufacturing Year</th>
+                    <td>2025</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Download PDF Button -->
+    <button id="download-btn">Download PDF</button>
+
+    <script>
+        document.getElementById("download-btn").addEventListener("click", function () {
+            const table = document.getElementById("details-table");
+            const tableData = [];
+            const rows = table.rows;
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowData = [];
+                const cells = rows[i].cells;
+                for (let j = 0; j < cells.length; j++) {
+                    rowData.push(cells[j].innerText);
+                }
+                tableData.push(rowData);
+            }
+
+            const docDefinition = {
+                content: [
+                    {
+                        text: 'Insurance Quotation Details',
+                        style: 'header'
+                    },
+                    {
+                        table: {
+                            widths: ['25%', '25%', '25%', '25%'],
+                            body: tableData
+                        }
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    }
+                }
+            };
+
+            pdfMake.createPdf(docDefinition).download('insurance_quotation.pdf');
+        });
+    </script>
+
+</body>
+
+</html>
